@@ -1,5 +1,5 @@
 name: Workout Coach
-version: "1.0.2"
+version: "1.0.3"
 slug: workout_coach
 description: Runs the workout coach weekly and post-workout pipelines.
 arch:

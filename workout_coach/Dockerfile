@@ -1,16 +1,17 @@
 # Build this Dockerfile from the repository root:
 # docker build -f coach-addon/Dockerfile .
-ARG BUILD_FROM=python:3.12-alpine
+ARG BUILD_FROM=python:3.12-slim
 FROM ${BUILD_FROM}
 
-# python:3.12-alpine builds its own Python from source at /usr/local, entirely
-# separate from Alpine's own packaged Python. An apk-installed py3-matplotlib
-# lands in the OS Python, not this one - confirmed by ModuleNotFoundError at
-# runtime. Pip-installing matplotlib from the same musllinux wheel index used
-# for requests/garminconnect below is what actually reaches this interpreter.
-RUN apk add --no-cache jq \
+# Confirmed by a real build failure: matplotlib has no musllinux (Alpine)
+# wheel, and python:3.12-alpine ships no C compiler to build it from source
+# either. python:3.12-slim (Debian/glibc) is the pragmatic fix - matplotlib,
+# requests and garminconnect all have first-party manylinux wheels on PyPI,
+# so no extra wheel index or build toolchain is needed at all.
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y jq \
+    && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir \
-        --extra-index-url https://wheels.home-assistant.io/musllinux/ \
         requests \
         garminconnect \
         matplotlib
