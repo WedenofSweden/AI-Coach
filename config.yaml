@@ -1,0 +1,34 @@
+name: Workout Coach
+version: "1.0.0"
+slug: workout_coach
+description: Runs the workout coach weekly and post-workout pipelines.
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: services
+boot: auto
+homeassistant_api: true
+map:
+  - type: share
+    read_only: false
+options:
+  OPENAI_API_KEY: ""
+  HEVY_API_KEY: ""
+  WITHINGS_CLIENT_ID: ""
+  WITHINGS_CLIENT_SECRET: ""
+  SMTP_PASSWORD: ""
+  GARMIN_EMAIL: ""
+  GARMIN_PASSWORD: ""
+  weekly_hour: 19
+  weekly_minute: 0
+schema:
+  OPENAI_API_KEY: password
+  HEVY_API_KEY: password
+  WITHINGS_CLIENT_ID: password
+  WITHINGS_CLIENT_SECRET: password
+  SMTP_PASSWORD: password
+  GARMIN_EMAIL: str
+  GARMIN_PASSWORD: password
+  weekly_hour: int
+  weekly_minute: int
