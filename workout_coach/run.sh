@@ -23,4 +23,4 @@ export COACH_DB_PATH="/data/state/coach.db"
 cd "/share/workout planner"
 # `serve` performs the daily weekly-schedule check and runs post-workout
 # processing every 15 minutes (the defaults in orchestrator.py).
-exec python orchestrator.py serve
+exec python -u orchestrator.py serve
