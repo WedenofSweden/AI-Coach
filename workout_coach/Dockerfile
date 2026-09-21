@@ -3,13 +3,17 @@
 ARG BUILD_FROM=python:3.12-alpine
 FROM ${BUILD_FROM}
 
-# Alpine provides matplotlib as a compatible system package. Do not replace it
-# with pip installation: no suitable Alpine wheel is available for this image.
-RUN apk add --no-cache jq py3-matplotlib \
+# python:3.12-alpine builds its own Python from source at /usr/local, entirely
+# separate from Alpine's own packaged Python. An apk-installed py3-matplotlib
+# lands in the OS Python, not this one - confirmed by ModuleNotFoundError at
+# runtime. Pip-installing matplotlib from the same musllinux wheel index used
+# for requests/garminconnect below is what actually reaches this interpreter.
+RUN apk add --no-cache jq \
     && pip install --no-cache-dir \
         --extra-index-url https://wheels.home-assistant.io/musllinux/ \
         requests \
-        garminconnect
+        garminconnect \
+        matplotlib
 
 # Application code and all persistent state live on the Supervisor share map
 # (see config.yaml map: and run.sh cd into /share/workout planner), not in
